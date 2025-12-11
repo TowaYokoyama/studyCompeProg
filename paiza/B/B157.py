@@ -23,33 +23,33 @@ p_{N,1} p_{N,2} ... p_{N,K}
 
 ・1 ≦ N, K ≦ 50
 ・1 ≦ p_{i,j} ≦ 1,000 (1 ≦ i ≦ N, 1 ≦ j ≦ K)
-・p_{i,k} ≠ p_{j,k} (1 ≦ i < j ≦ N, 1 ≦ k ≦ K)
-　・それぞれの野菜について、他店と同じ値段で販売されていることはない
+p_{i,k} ≠ p_{j,k} (1 ≦ i < j ≦ N, 1 ≦ k ≦ K)
+・それぞれの野菜について、他店と同じ値段で販売されていることはない
 入力例1
 3 3
-100 200 300
-150 180 210
-200 150 200
+店舗１100 200 300
+店舗２150 180 210
+店舗３200 150 200
 出力例1
 2
 入力例2
 2 3
-100 90 180
-200 200 200
+店舗１100 90 180
+店舗２200 200 200
 出力例2
 1
 """
 N,K = map(int,input().split())
 p = [list(map(int,input().split())) for _ in range(N)]
 #合計金額が一番安くなるため -> 一番安い野菜を全部取得
-shops = set()
+shops = set()#1これにアドすると重複を弾いてくれるやつ
 for k in range(K):
     min_price = 10** 9
     best_shop = -1
     for i in range(N):
         if p[i][k] < min_price:
             min_price = p[i][k]
-            best_shop = i 
+            best_shop = i#ここにはいくよ
     shops.add(best_shop)
             
 print(len(shops))
