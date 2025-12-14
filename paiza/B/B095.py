@@ -155,3 +155,27 @@ for _ in range(N):
     scores.append(score)
 
 print(max(scores))
+
+
+import sys
+read = sys.stdin.readline
+
+N, M = map(int, read().split())
+a = [int(read()) for _ in range(M)]
+
+max_score = 0
+
+for _ in range(N):
+    h = [int(read()) for _ in range(M)]
+    diffs = [abs(x - y) for x, y in zip(a, h)]
+
+    score = 100
+    for d in diffs:
+        if d > 30: score -= 5
+        elif d > 20: score -= 3
+        elif d > 10: score -= 2
+        elif d > 5: score -= 1
+
+    max_score = max(max_score, max(score, 0))
+
+print(max_score)
