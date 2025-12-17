@@ -1,3 +1,4 @@
+#文字列sの中で異なる文字が最大k種類までの連続部分文字列
 def longest_substring_at_most_k_distinct(s, k):
     # 異なる文字を許容する数Kが0の場合、結果は空文字列
     if k == 0:
@@ -14,6 +15,7 @@ def longest_substring_at_most_k_distinct(s, k):
         char = s[right]
         # 文字charをウィンドウに追加（カウントを更新）
         char_count[char] = char_count.get(char, 0) + 1
+        #.get(key,default)は、keyが辞書に存在しない場合defaultを返す
 
         # ウィンドウ内の異なる文字数がKを超えている間、左端を動かして調整
         while len(char_count) > k:

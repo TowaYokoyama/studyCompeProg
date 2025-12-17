@@ -4,7 +4,7 @@ def max_subarray_sum(arr, k):
         return None
 
     # 最初のウィンドウ（先頭からK要素）の合計を計算
-    current_sum = sum(arr[:k])
+    current_sum = sum(arr[:k])#先頭からK要素のスライス
     max_sum = current_sum
 
     # ウィンドウを1つずつ右にスライドしながら合計を更新
