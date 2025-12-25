@@ -115,4 +115,57 @@ if all(open[i][i] for i in range(N)):
 if all(open[i][N-1-i] for i in range(N)):
     bingo += 1
 
+print(bingo) 
+
+# 辞書での解き方
+
+N, K = map(int, input().split())
+b = [list(map(int, input().split())) for _ in range(N)]
+c = list(map(int, input().split()))
+
+# 数字 → 座標 の辞書
+pos = {}
+for i in range(N):
+    for j in range(N):
+        pos[b[i][j]] = (i, j)
+
+# 中央は最初から開いている
+row = [0] * N
+col = [0] * N
+diag1 = 0
+diag2 = 0
+
+mid = N // 2
+row[mid] += 1
+col[mid] += 1
+diag1 += 1
+diag2 += 1
+
+# 抽選処理
+for x in c:
+    if x in pos:
+        i, j = pos[x]
+
+        row[i] += 1
+        col[j] += 1
+
+        if i == j:
+            diag1 += 1
+        if i + j == N - 1:
+            diag2 += 1
+
+# ビンゴ数を数える
+bingo = 0
+
+for i in range(N):
+    if row[i] == N:
+        bingo += 1
+    if col[i] == N:
+        bingo += 1
+
+if diag1 == N:
+    bingo += 1
+if diag2 == N:
+    bingo += 1
+
 print(bingo)
