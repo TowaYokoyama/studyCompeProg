@@ -72,3 +72,14 @@ Copy
 Copy
 8
 """
+N=int(input())
+A=list(map(int,input().split()))
+
+ans = 10**9
+for a in A:
+  cnt = 0
+  while a%2 == 0:
+    a = a//2
+    cnt+=1
+  ans = min(ans,cnt)
+print(ans)
