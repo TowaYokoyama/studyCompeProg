@@ -52,3 +52,18 @@ for i in range(1, N + 1):
         ans += i
 
 print(ans)
+
+N, A, B = map(int, input().split())
+ans = 0
+
+for i in range(1, N + 1):
+    x = i
+    s = 0
+    while x > 0:
+        s += x % 10
+        x //= 10
+
+    if A <= s <= B:
+        ans += i
+
+print(ans)
