@@ -166,3 +166,33 @@ Copy
 50
 
 """
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+C = list(map(int, input().split()))
+
+# 累積和
+SA = [0] * (N + 1)
+SB = [0] * (N + 1)
+SC = [0] * (N + 1)
+
+for i in range(N):
+    SA[i+1] = SA[i] + A[i]
+    SB[i+1] = SB[i] + B[i]
+    SC[i+1] = SC[i] + C[i]
+
+ans = -10**30
+best = -10**30  # max(SA[x] - SB[x]) for x < y
+
+for y in range(2, N):  # y < N
+    # x = y-1 を候補に追加
+    best = max(best, SA[y-1] - SB[y-1])
+
+    # 今の y での値
+    val = best + (SB[y] - SC[y])
+    ans = max(ans, val)
+
+# SC[N] を最後に足す
+ans += SC[N]
+
+print(ans)
