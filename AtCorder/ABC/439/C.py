@@ -104,3 +104,58 @@ for n in range(1,N+1):
   
 print(num_com)
 print(*ans)
+
+#模範回答
+"""ここが最大の発想転換
+❌ n を決めて x,y を探す
+⭕ x,y を決めて n を作る
+"""
+from collections import defaultdict
+N = int(input())
+cnt = defaultdict(int)
+
+limit = int(N**0.5) + 1
+for x in range(1, limit):
+    for y in range(x + 1, limit):
+        n = x * x + y * y 
+        if n > N:
+            break 
+        cnt[n] += 1
+        
+ans = [n for n in cnt if cnt[n] == 1]
+ans.sort()
+
+print(len(ans))
+print(*ans)#空白区切りで出力
+
+"""
+import numpy as np
+
+N = int(input())
+
+# 配列サイズ（次の2冪にするのが普通やけど、ここでは簡略）
+size = N + 1
+
+A = np.zeros(size, dtype=np.int64)
+
+# 平方数の位置を 1 にする
+i = 1
+while i * i <= N:
+    A[i * i] = 1
+    i += 1
+
+# FFT 畳み込み
+FA = np.fft.fft(A)
+C = np.fft.ifft(FA * FA)
+
+# C[n] ≒ n = x^2 + y^2 の通り数（x,y 順序あり）
+# 今回は 0 < x < y なので調整が必要やけど、雰囲気重視
+ans = []
+for n in range(1, N + 1):
+    if int(round(C[n].real)) == 2:  # (x,y),(y,x) の2通り
+        ans.append(n)
+
+print(len(ans))
+print(*ans)
+
+"""
