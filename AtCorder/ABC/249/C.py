@@ -114,3 +114,27 @@ cy
 Copy
 7
 """
+from collections  import defaultdict
+N, K = map(int, input().split())
+S = [input() for _ in range(N)]
+
+ans = 0
+
+#0~ (2**N) -1まで全探索
+for bit in range(1 << N):
+    seen = defaultdict(int)
+    
+    #i番目の文字列を選ぶかどうか
+    for i in range(N):
+        if bit & (1 << i):#i番目を選ぶ
+            for c in S[i]: #文字を１つずつ見ていく
+                seen[c] += 1 #何個の文字に含まれたか
+                
+    cnt = 0
+    for v in seen.values():
+        if v == K:
+            cnt +=1
+            
+    ans = max(ans, cnt)
+    
+print(ans)
