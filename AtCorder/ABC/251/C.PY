@@ -113,3 +113,26 @@ ab 3
 Copy
 8
 """
+N = int(input())
+
+first = {}  # S -> (score, index)
+
+for i in range(1, N + 1):
+    S, T = input().split()
+    T = int(T)
+
+    # 初登場の文字列だけ保存
+    if S not in first:
+        first[S] = (T, i)
+
+# オリジナル提出の中から最優秀賞を探す
+best_score = -1
+best_index = -1
+
+for score, idx in first.values():
+    if score > best_score:
+        best_score = score
+        best_index = idx
+    # 同点は更新しない → 早い提出が残る
+
+print(best_index)
