@@ -174,3 +174,31 @@ def dfs(s, open_cnt, close_cnt):
         dfs(s + ')', open_cnt, close_cnt + 1)
         
 dfs('', 0, 0)
+
+
+N = int(input())
+
+# 奇数なら何も出さない
+if N % 2 == 1:
+    exit()
+
+stack = [("", 0, 0)]
+
+while stack:
+    s, open_cnt, close_cnt = stack.pop()
+
+    # 完成したら出力
+    if len(s) == N:
+        print(s)
+        continue
+
+    # 注意：stackはLIFOなので
+    # 辞書順にしたいなら「) を先に積む」
+
+    # ')' を置けるなら積む
+    if close_cnt < open_cnt:
+        stack.append((s + ')', open_cnt, close_cnt + 1))
+
+    # '(' を置けるなら積む
+    if open_cnt < N // 2:
+        stack.append((s + '(', open_cnt + 1, close_cnt))
