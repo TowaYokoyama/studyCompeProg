@@ -97,6 +97,10 @@ for d in range(10):
 
     for i in range(N):
         pos = S[i].index(str(d))
+        """
+        文字列（またはリスト）の中で、
+指定した要素が「最初に出てくる位置」を返す
+        """
         cnt[pos] += 1
 
     cur_max = 0
