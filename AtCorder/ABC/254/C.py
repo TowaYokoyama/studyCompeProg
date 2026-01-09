@@ -87,3 +87,20 @@ Yes
 
 
 """
+
+N, K = map(int, input().split())
+A = list(map(int, input().split()))
+b = sorted(A)
+#k個の連続成分ごとに分ける  
+for i in range(K):
+    a_sub = []
+    b_sub = []
+    for j in range(i, N, K):
+        a_sub.append(A[j])
+        b_sub.append(b[j])
+        
+    if sorted(a_sub) != sorted(b_sub):
+      print("No")
+      exit() #exitはプログラムを強制終了
+      
+print("Yes")
