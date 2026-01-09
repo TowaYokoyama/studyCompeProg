@@ -166,3 +166,44 @@ Copy
 20 が答えになります。
 3 番目以降のクエリも同様にして答えを求められます
 """
+from collections import deque
+
+# --- 入力 ---
+N, M = map(int, input().split())
+
+# グラフ作成（隣接リスト）
+graph = [[] for _ in range(N + 1)]
+
+for _ in range(M):
+    a, b = map(int, input().split())
+    graph[a].append(b)
+    graph[b].append(a)
+
+Q = int(input())
+
+# --- 各クエリ処理 ---
+for _ in range(Q):
+    x, k = map(int, input().split())
+
+    visited = set()
+    visited.add(x)
+
+    # (頂点, 距離)
+    q = deque()
+    q.append((x, 0))
+
+    ans = 0
+
+    while q:
+        v, dist = q.popleft()
+        ans += v
+
+        if dist == k:
+            continue
+
+        for nv in graph[v]:
+            if nv not in visited:
+                visited.add(nv)
+                q.append((nv, dist + 1))
+
+    print(ans)
