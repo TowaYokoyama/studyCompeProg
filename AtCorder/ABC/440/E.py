@@ -117,3 +117,109 @@ Copy
 1371735
 1371734
 """
+import sys
+import heapq
+import bisect
+
+input = sys.stdin.readline
+
+def comb_multiset(n: int, r: int, cap: int) -> int:
+    """
+    重複組合せ: C(n+r-1, r-1)
+    n: 選ぶ枚数, r: 種類数
+    cap: これ以上は切り上げ（X までしか要らないので）
+    """
+    if r <= 1:
+        return 1
+    k = r - 1
+    res = 1
+    # res = Π_{i=1..k} (n+i)/i
+    for i in range(1, k + 1):
+        res = res * (n + i) // i
+        if res > cap:
+            return cap
+    return res
+
+def main():
+    N, K, X = map(int, input().split())
+    A = list(map(int, input().split()))
+    A.sort(reverse=True)
+
+    # 同じ値ごとに圧縮: values[], counts[]
+    values = []
+    counts = []
+    for a in A:
+        if not values or values[-1] != a:
+            values.append(a)
+            counts.append(1)
+        else:
+            counts[-1] += 1
+
+    v0 = values[0]
+    c0 = counts[0]
+    base = v0 * K
+
+    # 値が全部同じなら、和は常に base（ただし重複あり）
+    if len(values) == 1:
+        mult = comb_multiset(K, N, X)  # 全タイプ数 N
+        t = min(X, mult)
+        out = "\n".join([str(base)] * t)
+        sys.stdout.write(out + ("\n" if t > 0 else ""))
+        return
+
+    # 置き換えコスト（差分）: w_j = v0 - v_j (j>=1)
+    weights = [v0 - values[j] for j in range(1, len(values))]
+    group_counts = counts[1:]  # 各グループの種類数
+
+    D = len(weights)  # 置き換え先グループ数 (= distinct values - 1)
+
+    # Dijkstra的に「コスト最小の置き換え方」から列挙
+    # state = (d1, d2, ..., dD) それぞれのグループから何枚取ったか
+    start = (0,) * D
+    pq = [(0, start)]
+    seen = {start}
+
+    remain = X
+    ans_lines = []
+
+    CAP = X  # 組合せ数は X 以上は全部 X で切り上げれば十分
+
+    while pq and remain > 0:
+        cost, state = heapq.heappop(pq)
+        d = sum(state)
+        if d > K:
+            continue
+
+        # この状態の「和」
+        s = base - cost
+
+        # この状態が作る “同じ和の重複回数（選び方の数）”
+        # k0 = K-d を最大値グループに割り当て、各グループ内での分配は重複組合せ
+        mult = comb_multiset(K - d, c0, CAP)
+        if mult > 0:
+            for dj, cj in zip(state, group_counts):
+                mult = min(CAP, mult * comb_multiset(dj, cj, CAP))
+                if mult >= CAP:
+                    break
+
+        # 出力（X で打ち切り）
+        take = min(remain, mult)
+        if take > 0:
+            ans_lines.extend([str(s)] * take)
+            remain -= take
+
+        # 近傍（まだ枚数を増やせるなら、どれか1グループに+1）
+        if d < K:
+            for i in range(D):
+                ns = list(state)
+                ns[i] += 1
+                ns = tuple(ns)
+                if ns in seen:
+                    continue
+                seen.add(ns)
+                heapq.heappush(pq, (cost + weights[i], ns))
+
+    sys.stdout.write("\n".join(ans_lines) + ("\n" if ans_lines else ""))
+
+if __name__ == "__main__":
+    main()
