@@ -126,21 +126,64 @@ Copy
 881288390
 747441478
 """
+import bisect 
+
 N,Q = map(int,input().split())
 A = list(map(int,input().split()))
-K = [tuple(map(int,input().split())) for _ in range(Q)] 
-for j in range(Q):
-  x,y = K[j]
-  l_edge = x
-  r_edge = x+y-1
-  target = []
-  for z in range(x,r_edge,1):
-    target.append(z)
+A.sort()
+
+for _ in range(Q):
+  X,Y = map(int,input().split())
   
-  A.sort()#Aを降順にして範囲を探る
-  for i in A:
-    #iがリストに入ってる場合
-    if i in target:
-      r_edge += 1
+  #探索範囲d
+  low = X 
+  high = X+Y+N #Aが全部が言ってもたりる範囲
+  
+  while low < high:
+    mid = (low + high)//2
     
-print(r_edge)
+    #x以上mid以下に含まれるAの個数
+    cnt = bisect.bisect_right(A,mid)- bisect.bisect_left(A,X)
+    
+    #欠番の数
+    missing = (mid-X+1) -cnt
+    
+    if missing >= Y:
+      high = mid
+      
+    else:
+      low = mid + 1
+      
+  print(low)
+  
+  
+  
+  import bisect
+
+def solve(a, x, y, idx1, k):
+  # X+Y-1+K 以下の最大の A の index
+  idx2 = bisect.bisect_right(a, x+y-1+k) - 1
+  num_included_A = max(0, idx2 - idx1 + 1) # 一応 idx1がidx2を飛び越えないように
+  return k >= num_included_A
+
+N, Q = map(int, input().split())
+A = [0] + list(map(int, input().split()))
+A.sort()
+ans = []
+for _ in range(Q):
+  X, Y = map(int, input().split())
+  # これは最初に求めておく。毎回 idx2 と一緒に計算してたら TLE になった。
+  idx1 = bisect.bisect_left(A, X)
+
+  ok = N
+  ng = -1
+  while (abs(ok - ng) > 1):
+    mid = (ok + ng) // 2
+    if solve(A, X, Y, idx1, mid):
+      ok = mid
+    else:
+      ng = mid
+  ans.append(X+Y-1+ok)
+
+for an in ans:
+  print(an)

@@ -88,7 +88,32 @@ Copy
 1 番目のテストケースにおいて、x=4 として手順を実行すると、マス 1,4,5,8 が黒く塗られ、コストの合計は 4 となります。 コストの合計を 4 未満にすることはできないため、これが最小値となります。
 """
 T = int(input())
+ans = []
 for _ in range(T):
-    N,W = map(int,input().split())
-    C = list(map(int,input().split()))
-    
+  N, W = map(int, input().split())
+  C = list(map(int, input().split()))
+  tmp_ans = 10**20
+
+  # 添字 i を見て、あまり 0 ～ 2W-1 までに分類して、それぞれの合計値を出す。
+  S = [0 for _ in range(2*W)]
+  for i, c in enumerate(C):
+    num = i % (2*W)
+    S[num] += c
+
+  # 長さ 2W の配列 S の中で連続 W 個の和を求める。その中で最小のものを見つける。
+  tmp_sum = 0
+  # 最初は 0 から W-1
+  for i in range(W):
+    tmp_sum += S[i]
+
+  tmp_ans = min(tmp_ans, tmp_sum)
+  for i in range(2*W - 1): # 2W-1回ずらしていく
+    out_S = i
+    in_S = (i + W) % (2*W)
+    tmp_sum -= S[out_S]
+    tmp_sum += S[in_S]
+    tmp_ans = min(tmp_ans, tmp_sum)
+  ans.append(tmp_ans)
+
+for an in ans:
+  print(an)
