@@ -17,7 +17,7 @@ class Solution:
         rlu = []
         i = 0
         k = len(s)
-        
+         
         while i < k:
             j = i #jは最後尾
             while j<k and s[j] == s[i]:
