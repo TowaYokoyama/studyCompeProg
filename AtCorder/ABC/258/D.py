@@ -105,8 +105,8 @@ A = []
 B = []
 for _ in range(N):
     a, b = map(int, input().split())
-    A.append(a)
-    B.append(b)
+    A.append(a)#Aはムービーで
+    B.append(b)#Bはゲームプレイ
 
 # 累積時間
 # prefix[i] = ステージ1〜iまでを「初回クリア」した合計時間
@@ -115,14 +115,17 @@ prefix = [0] * (N + 1)
 # prefix を作る（累積和）
 for i in range(1, N + 1):
     prefix[i] = prefix[i - 1] + A[i - 1] + B[i - 1]
-
+    #iはprefixの何ステージ文化を表すんよ
 ans = 10**30  # 十分大きい値
 min_B = 10**30  # 今までで一番小さい B
 
 # i = 1〜N まで「最初に進むステージ数」を試す
 for i in range(1, N + 1):
     min_B = min(min_B, B[i - 1])
-
+    """
+    「ステージ1〜iの中で、
+一番“1回あたりが安い”場所はどこ？」
+    """
     # i ステージ分は必ず初回クリア
     # それで i 回クリア
     if i > X:
