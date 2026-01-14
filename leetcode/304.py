@@ -14,7 +14,28 @@ sumRegionがO(1)時間計算量で動作するアルゴリズムを設計する�
 class NumMatrix:
 
     def __init__(self, matrix: List[List[int]]):
+        if not matrix:
+            return 
+        H = len(matrix)
+        W = len(matrix[0])
+        
+        #二次元累積和
+        self.prefix = [[0] * (W+1) for _ in range(H+1)]
+        
+        for i in range(H):
+            for j in range(W):
+                self.prefix[i+1][j+1] = (
+                    self.prefix[i][j+1]
+                    + self.prefix[i+1][j]
+                    - self.prefix[i][j]
+                    + matrix[i][j]
+                )
         
 
     def sumRegion(self, row1: int, col1: int, row2: int, col2: int) -> int:
-        
+        return(
+             self.prefix[row2+1][col2+1]
+            - self.prefix[row1][col2+1]
+            - self.prefix[row2+1][col1]
+            + self.prefix[row1][col1]
+        )
