@@ -198,3 +198,83 @@ Copy
 21105046168287 22050167303226 33624667752182 223328231190194 441936776830492 1141371400772596 1141702254882183 3464097998105256
 出力する値は 32bit 整数に収まらないことがあります。
 """
+import sys
+sys.setrecursionlimit(10**7)
+
+N, X, Y = map(int, sys.stdin.readline().split())
+ops = []
+for _ in range(N):
+    c, a, b = sys.stdin.readline().split()
+    ops.append((c, int(a), int(b)))
+
+xs = set([0, X])
+ys = set([0, Y])
+
+for c, a, b in ops:
+    if c == 'X':
+        xs |= {a, a - b, a + b}
+    else:
+        ys |= {a, a - b, a + b}
+
+xs = sorted(xs)
+ys = sorted(ys)
+
+def inside(x, y):
+    return 0 <= x < X and 0 <= y < Y
+
+cells = {}
+idx = 0
+
+for i in range(len(xs) - 1):
+    for j in range(len(ys) - 1):
+        mx = (xs[i] + xs[i+1]) // 2
+        my = (ys[j] + ys[j+1]) // 2
+
+        x, y = mx, my
+        for c, a, b in reversed(ops):
+            if c == 'X':
+                if x < a:
+                    y += b
+                else:
+                    y -= b
+            else:
+                if y < a:
+                    x += b
+                else:
+                    x -= b
+
+        if inside(x, y):
+            cells[(i, j)] = idx
+            idx += 1
+
+parent = list(range(idx))
+area = [0] * idx
+
+def find(x):
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
+
+def unite(a, b):
+    a, b = find(a), find(b)
+    if a != b:
+        parent[b] = a
+        area[a] += area[b]
+
+for (i, j), k in cells.items():
+    area[k] = (xs[i+1] - xs[i]) * (ys[j+1] - ys[j])
+
+for (i, j), k in cells.items():
+    for di, dj in [(1,0),(0,1),(-1,0),(0,-1)]:
+        ni, nj = i + di, j + dj
+        if (ni, nj) in cells:
+            unite(k, cells[(ni, nj)])
+
+res = {}
+for i in range(idx):
+    r = find(i)
+    res[r] = res.get(r, 0) + area[i]
+
+ans = sorted(res.values())
+print(len(ans))
+print(*ans)
