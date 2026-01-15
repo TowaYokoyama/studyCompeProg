@@ -123,3 +123,89 @@ Copy
 
 2 つ目のテストケースについて、マス (1,1) の鏡の置き方をタイプ A に、マス (2,2) の鏡の置き方をタイプ B に変更することで、下図のように青木君に光を届けることができます。1 回以下の操作で青木君に光を届けることはできないので、答えは 2 です。
 """
+import sys
+from collections import deque
+
+def solve_case(H, W, S):
+    # dir: 0=UP, 1=RIGHT, 2=DOWN, 3=LEFT
+    # Type A: straight
+    # Type B: "\" mirror (top-left to bottom-right)
+    # Type C: "/" mirror (top-right to bottom-left)
+
+    # mapping[type][dir_in] = dir_out
+    A_map = [0, 1, 2, 3]
+    B_map = [3, 2, 1, 0]  # UP->LEFT, RIGHT->DOWN, DOWN->RIGHT, LEFT->UP
+    C_map = [1, 0, 3, 2]  # UP->RIGHT, RIGHT->UP, DOWN->LEFT, LEFT->DOWN
+    maps = {
+        'A': A_map,
+        'B': B_map,
+        'C': C_map,
+    }
+    types = ['A', 'B', 'C']
+
+    dx = [-1, 0, 1, 0]
+    dy = [0, 1, 0, -1]
+
+    n_cells = H * W
+    INF = 10**18
+    dist = [INF] * (n_cells * 4)
+
+    def idx(i, j, d):
+        return ((i * W + j) * 4 + d)
+
+    start = idx(0, 0, 1)  # enter (1,1) from left, moving RIGHT
+    dist[start] = 0
+    dq = deque([start])
+
+    ans = INF
+
+    while dq:
+        v = dq.popleft()
+        cur = dist[v]
+        if cur >= ans:
+            continue
+
+        cell = v // 4
+        d_in = v % 4
+        i = cell // W
+        j = cell % W
+
+        original = S[i][j]
+
+        for t in types:
+            add = 0 if t == original else 1
+            d_out = maps[t][d_in]
+            ni = i + dx[d_out]
+            nj = j + dy[d_out]
+            ncost = cur + add
+
+            # leaving the grid
+            if not (0 <= ni < H and 0 <= nj < W):
+                # success iff we exit to the right of (H-1, W-1)
+                if i == H - 1 and j == W - 1 and d_out == 1:
+                    if ncost < ans:
+                        ans = ncost
+                continue
+
+            u = idx(ni, nj, d_out)
+            if ncost < dist[u]:
+                dist[u] = ncost
+                if add == 0:
+                    dq.appendleft(u)
+                else:
+                    dq.append(u)
+
+    return ans
+
+def main():
+    input = sys.stdin.readline
+    T = int(input().strip())
+    out = []
+    for _ in range(T):
+        H, W = map(int, input().split())
+        S = [input().strip() for _ in range(H)]
+        out.append(str(solve_case(H, W, S)))
+    print("\n".join(out))
+
+if __name__ == "__main__":
+    main()
