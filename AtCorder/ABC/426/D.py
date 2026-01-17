@@ -105,3 +105,38 @@ Copy
 先頭の文字 1 を削除し、0 を（削除した後の S における）先頭に挿入する。S= 00000 になる。
 2 番目のテストケースについて、はじめから S の全ての文字が同じ文字であるため、操作は 1 回も必要ありません。
 """
+import sys
+
+it = iter(sys.stdin.buffer.read().split())
+T = int(next(it))
+
+out = []
+for _ in range(T):
+    n = int(next(it))
+    s = next(it).decode()
+
+    c0 = s.count('0')
+    c1 = n - c0
+
+    max0 = 0
+    max1 = 0
+    cur = 0
+    prev = None
+    for ch in s:
+        if ch == prev:
+            cur += 1
+        else:
+            cur = 1
+            prev = ch
+        if ch == '0':
+            if cur > max0:
+                max0 = cur
+        else:
+            if cur > max1:
+                max1 = cur
+
+    ans0 = c1 + 2 * (c0 - max0)  # all '0'
+    ans1 = c0 + 2 * (c1 - max1)  # all '1'
+    out.append(str(ans0 if ans0 < ans1 else ans1))
+
+sys.stdout.write("\n".join(out))
