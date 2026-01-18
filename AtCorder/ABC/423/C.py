@@ -82,5 +82,50 @@ Copy
 8
 
 """
-N,R = map(int,input().split())
-L = list(map(int,input().split()))
+N, R = map(int, input().split())
+L = [0] + list(map(int, input().split()))  # 1-indexed
+
+# 開いているドアの位置を集める
+opens = [i for i in range(1, N + 1) if L[i] == 0]
+
+# すでに全部閉まっている
+if not opens:
+    print(0)
+    exit()
+
+a = min(opens)
+b = max(opens)
+
+# prefix sums
+# open_ps[i] = ドア1..iまでに「開いている」数
+# close_ps[i] = ドア1..iまでに「閉まっている」数
+open_ps = [0] * (N + 1)
+close_ps = [0] * (N + 1)
+
+for i in range(1, N + 1):
+    open_ps[i] = open_ps[i - 1]
+    close_ps[i] = close_ps[i - 1]
+    if L[i] == 0:
+        open_ps[i] += 1
+    else:
+        close_ps[i] += 1
+
+# 区間 (l, r] を通過するコスト
+# 開いてる → 1回、閉まってる → 2回
+def cost(l, r):
+    o = open_ps[r] - open_ps[l]
+    c = close_ps[r] - close_ps[l]
+    return o * 1 + c * 2
+
+ans = 10**18
+
+# 左 → 右
+if R <= a:
+    ans = min(ans, cost(R, b))
+elif R >= b:
+    ans = min(ans, cost(a, R))
+else:
+    ans = min(ans, cost(R, a) + cost(a, b))
+    ans = min(ans, cost(R, b) + cost(a, b))
+
+print(ans)
