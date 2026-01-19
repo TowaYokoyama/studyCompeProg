@@ -212,4 +212,38 @@ Copy
 N = int(input())
 A = list(map(int,input().split()))
 
+A = [x-1 for x in A]#0~indexにしただけ
 
+state = [0] * N #今どの段階なのか
+pos = [-1] * N #pathの何番目なのか
+
+for start in range(N): #まだ未訪問の頂点から一本道を歩く
+  if state[start] != 0:
+    continue 
+  
+  path = []#今この瞬間に、実際に歩いてきた順番をそのまま並べたメモ
+  v = start 
+  
+  while True:
+    if state[v] == 0:#未訪問の場合
+      state[v] = 1 
+      pos[v] = len(path)
+      path.append(v)
+      v = A[v]
+      continue 
+    
+    if state[v] == 1:
+      #vが探索中に再登場->閉路はpath[pos[v]:]
+      cycle = path[pos[v]:]
+      print(len(cycle))
+      print(*[x+1 for x in cycle])
+      exit()
+      
+    #state[v] == 2の時,この探索でが閉路が新しく見つからない
+    break 
+  
+
+#pathに積んだ頂点を探索完了にする
+for x in path:
+  state[x] = 2 
+  pos[x] = -1
