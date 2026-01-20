@@ -233,7 +233,6 @@ Copy
 0
 
 """
-#!/usr/bin/env python3
 r_t,c_t,r_a,c_a = map(int,input().split())
 # 方向を座標変化量に変換する辞書
 d = {'U':(-1, 0),'D':(1, 0),'L':(0, -1),'R':(0, 1)}
