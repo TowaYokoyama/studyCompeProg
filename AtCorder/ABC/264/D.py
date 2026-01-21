@@ -40,3 +40,17 @@ redocta
 Copy
 21
 """
+S = input()
+cnt = 0
+target = "atcoder"
+
+pos = {c:i for i,c in enumerate(target)}
+
+A = [pos[c] for c in S]
+
+ans = 0
+for i in range(7):
+    for j in range(i+1,7):
+        if A[i]>A[j]:
+            ans +=1
+print(ans)
