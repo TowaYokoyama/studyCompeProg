@@ -124,4 +124,4 @@ for l in range(N-M):
     window_sum = window_sum - A[l] + A[l+M]
     ans = max(ans,cur)
     
-print(ans)  
+print(ans) 
