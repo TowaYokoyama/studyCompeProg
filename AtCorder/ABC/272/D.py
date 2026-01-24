@@ -1,5 +1,3 @@
-# pypyで提出
-
 # 入力の受け取り
 N,M=map(int,input().split())
 
