@@ -78,4 +78,30 @@ Copy
 9
 """
 N = int(input())
-S = [list(input().split())for _ in range(N)]
+S = []
+for _ in range(N):
+    S.append(input())
+
+dp = [[0] * (N+1) for _ in range(N)]
+
+for i in range(N):
+    for j in range(N):
+        if S[i][j] == ".":
+            dp[i][0] += 1
+
+
+for i in range(N):
+    for j in range(1, N+1):
+        if S[i][j-1] == ".":
+            dp[i][j] = dp[i][j-1] - 1
+        else:
+            dp[i][j] = dp[i][j-1] + 1
+
+
+for i in range(1, N):
+    pre_min = 10**20
+    for j in range(N, -1, -1):
+        pre_min = min(pre_min, dp[i-1][j])
+        dp[i][j] += pre_min
+
+print(min(dp[-1]))
