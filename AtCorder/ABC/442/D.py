@@ -148,15 +148,35 @@ Copy
 142
 26
 """
-N,Q = map(int,input().split())
-A = list(map(int,input().split()))
-for _ in range(Q):
-    query = input()
-    if query[0] == 1:
-        x = query[1]
-        A[x],A[x+1] = A[x+1],A[x]
+# N,Q = map(int,input().split())
+# A = list(map(int,input().split()))
+# for _ in range(Q):
+#     query = input()
+#     if query[0] == 1:
+#         x = query[1]
+#         A[x],A[x+1] = A[x+1],A[x]
+#     else:
+#         a = query[1]
+#         b = query[2] 
+#         sigma = sum()
+#         print()
+        
+n, q = map(int, input().split())
+a = list(map(int, input().split()))
+csum = [0]
+cnt = 0
+for i in range(n):
+    cnt += a[i]
+    csum.append(cnt)
+# print(csum)
+for _ in range(q):
+    que = list(input().split())
+    if que[0] == "1":
+        x = int(que[1])
+        csum[x] = csum[x - 1] + csum[x + 1] - csum[x]
     else:
-        a = query[1]
-        b = query[2] 
-        sigma = sum()
-        print()
+        l = int(que[1]) - 1
+        r = int(que[2])
+        print(csum[r] - csum[l])
+        
+        
