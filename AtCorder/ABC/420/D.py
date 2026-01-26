@@ -98,3 +98,62 @@ x#x#o
 Copy
 10
 """
+from collections import deque 
+H,W = map(int,input().split())
+g = [list(input())for _ in range(H)]
+"""
+. ：空きマス。
+# ：障害物マス。
+S ：スタートマス。
+G ：ゴールマス。
+o ：開いたドアのマス。
+x ：閉じたドアのマス。
+"""
+dirs = [(-1,0),(1,0),(0,-1),(0,1)]  # 上下左右
+for i in range(H):
+    for j in range(W):
+        if g[i][j] == 'S':
+            sx, sy = i, j
+        if g[i][j] == 'G':
+            gx, gy = i, j
+
+def bfs(sx, sy, gx, gy):
+    INF = -1
+    dist = [[[INF]*2 for _ in range(W)] for _ in range(H)]
+
+    q = deque()
+    q.append((sx, sy, 0))      # (x, y, door_state)
+    dist[sx][sy][0] = 0
+
+    while q:
+        x, y, state = q.popleft()
+        d = dist[x][y][state]
+
+        if (x, y) == (gx, gy):
+            return d
+
+        for dx, dy in dirs:
+            nx, ny = x + dx, y + dy
+            if not (0 <= nx < H and 0 <= ny < W):
+                continue
+
+            cell = g[nx][ny]
+            if cell == '#':
+                continue
+
+            next_state = state
+            if cell == '?':
+                next_state ^= 1
+
+            if cell == 'o' and next_state == 1:
+                continue
+            if cell == 'x' and next_state == 0:
+                continue
+
+            if dist[nx][ny][next_state] == INF:
+                dist[nx][ny][next_state] = d + 1
+                q.append((nx, ny, next_state))
+
+    return -1
+
+print(bfs(sx, sy, gx, gy))
