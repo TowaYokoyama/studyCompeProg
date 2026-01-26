@@ -1,19 +1,17 @@
-from collections import deque
-
-def bfs():
-    queue = deque()
-    queue.append(初期状態)
+def dfs():
+    stack = []
+    stack.append(初期状態)
     visited[初期状態] = True
 
-    while queue:
-        state = queue.popleft()
+    while stack:
+        state = stack.pop()   # ← ここが違う
 
         if ゴール判定:
-            return 距離
+            return True       # DFS は距離を保証しない
 
-        for 次の状態 in 遷移:
+        for next_state in 遷移:
             if 未訪問:
-                visited = True
-                queue.append(次の状態)
+                visited[next_state] = True
+                stack.append(next_state)
 
-    return -1
+    return False
