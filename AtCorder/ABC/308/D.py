@@ -144,53 +144,58 @@ Copy
 Yes
 """
 from collections import deque
+
 H,W = map(int,input().split())
 S = []
 for _ in range(H):
     s = input()
     S.append(s) 
+
 """
 s → n → u → k → e → s → n →って言うルートを通れるかどうかのお話
 """
+
 dirs = [(1,0),(0,1),(-1,0),(0,-1)]
 
+# visited[x][y][i] := (x,y) に snuke[i] として到達したか
 visited = [[[False]*5 for _ in range(W)] for _ in range(H)]
-if S[0][0]!= "s":
-    print("No")
-    exit()
 
-#sunkeロジックの生成
+# snuke ロジック
 A = "snuke"
 
 sx,sy = 0,0
 gx,gy = H-1,W-1
 
+# スタートが s じゃなければ無理
+if S[sx][sy] != "s":
+    print("No")
+    exit()
 
 def bfs(sx,sy):
     queue = deque()
-    queue.append((sx,sy,0)) #0='s'
+    queue.append((sx, sy, 0))   # 0 = 's'
     visited[sx][sy][0] = True 
 
     while queue:
         x,y,i = queue.popleft()
-        
-        #ゴール到達
+
+        # ゴール到達
         if x == gx and y == gy:
             return True
-        
-        next_i = (i+1)%5 
+
+        next_i = (i + 1) % 5
         next_char = A[next_i]
-        
+
         for dx,dy in dirs:
             nx,ny = x+dx,y+dy 
-            if 0<=nx<H and 0<=ny<y:
-                if  not visited[nx][ny][next_i] and S[nx][ny] == next_char:
-                    visited[nx][ny][next_i] = True 
-                    queue.append((nx,ny,next_i))
-                    
-    return True 
+            if 0 <= nx < H and 0 <= ny < W:
+                if not visited[nx][ny][next_i] and S[nx][ny] == next_char:
+                    visited[nx][ny][next_i] = True
+                    queue.append((nx, ny, next_i))
 
-if bfs(sx,sy):
+    return False
+
+if bfs(sx, sy):
     print("Yes")
 else:
     print("No")
