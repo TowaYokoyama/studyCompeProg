@@ -91,3 +91,99 @@ Copy
 14
 
 """
+import sys
+input = sys.stdin.readline
+
+class BIT:
+    def __init__(self, n):
+        self.n = n
+        self.bit = [0] * (n + 1)
+
+    def add(self, i, x):
+        while i <= self.n:
+            self.bit[i] += x
+            i += i & -i
+
+    def sum(self, i):
+        s = 0
+        while i > 0:
+            s += self.bit[i]
+            i -= i & -i
+        return s
+
+
+def main():
+    N, T = map(int, input().split())
+    S = input().strip()
+    X = list(map(int, input().split()))
+
+    ants = []
+    for i in range(N):
+        if S[i] == '1':
+            final_pos = X[i] + T
+        else:
+            final_pos = X[i] - T
+        ants.append((X[i], final_pos))
+
+    ants.sort()
+    finals = [f for _, f in ants]
+
+    vals = sorted(set(finals))
+    comp = {v: i + 1 for i, v in enumerate(vals)}
+
+    bit = BIT(len(vals))
+    ans = 0
+
+    for f in finals:
+        p = comp[f]
+        # ★ 修正点：>= を数える
+        ans += bit.sum(len(vals)) - bit.sum(p - 1)
+        bit.add(p, 1)
+
+    print(ans)
+
+
+if __name__ == "__main__":
+    main()
+
+
+import sys
+input = sys.stdin.readline
+
+def main():
+    N, T = map(int, input().split())
+    S = input().strip()
+    X = list(map(int, input().split()))
+
+    A = []  # 右向き (S[i] == '1')
+    B = []  # 左向き (S[i] == '0')
+
+    for i in range(N):
+        if S[i] == '1':
+            A.append(X[i])
+        else:
+            B.append(X[i])
+
+    A.sort()
+    B.sort()
+
+    l = 0
+    r = 0
+    ans = 0
+    m = len(B)
+
+    for x in A:
+        # B[j] > x となる最小の j
+        while l < m and B[l] <= x:
+            l += 1
+
+        # B[j] <= x + 2T となる最大の j
+        while r < m and B[r] <= x + 2 * T:
+            r += 1
+
+        ans += r - l
+
+    print(ans)
+
+if __name__ == "__main__":
+    main()

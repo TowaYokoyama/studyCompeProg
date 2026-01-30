@@ -9,7 +9,7 @@ class BIT:
         res = 0
         while i > 0:
             res += self.bit[i] # フェニック木のi番目の値を加算
-            i -= -i & i # 最も右にある1の桁を0にする
+            i -= i & -i # 最も右にある1の桁を0にする
         return res
 
     # i番目の値にxを足して更新する
