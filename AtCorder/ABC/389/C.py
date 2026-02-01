@@ -112,6 +112,7 @@ for _ in range(Q):
     elif query[0] == '2': #この際に,列が空でないということは保証されている！
        head,len_m = snakes.popleft()#先頭を殺す
        offset += len_m 
+
     else:
         head , _  = snakes[int(query[1])-1]
         print(head - offset)
