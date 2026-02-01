@@ -93,7 +93,28 @@ Copy
 左から 4 列目の駒を上に隣接するマスに移動させる。 駒は左の列から順に 3,2,1,2,3 行目に存在する。
 2 番目のテストケースについて、操作を行わなくても問題文中の条件を満たしています。
 """
+import sys
+input = sys.stdin.readline
+
 T = int(input())
 for _ in range(T):
     N = int(input())
-    R = list(map(int,input().split))
+    R = list(map(int, input().split()))
+    
+    """
+    それぞれの制約
+    ① もともとの高さ R[i] を超えられない
+    å② 左の列より 1 以上高くできない」
+    """
+    L = [0] * N
+    L[0] = R[0]#最左点
+    for i in range(1, N):
+        L[i] = min(R[i], L[i-1] + 1)
+
+    H = [0] * N
+    H[-1] = L[-1]
+    for i in range(N - 2, -1, -1):
+        H[i] = min(L[i], H[i + 1] + 1)
+
+    ans = sum(R[i] - H[i] for i in range(N))
+    print(ans)
