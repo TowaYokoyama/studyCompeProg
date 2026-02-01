@@ -135,29 +135,84 @@ Copy
 (1,3) は壁マスであるが、現時点で (2,3),(3,3),(4,3),(5,3) は共に空きマスであるため、高橋君は (1,3) にある壁を破壊して (1,3) に移動する。
 移動中に失敗せず (1,1),(1,3),(1,4),(1,5) には辿り着くことができるので、 10111 と出力してください。
 """
-from collections import deque
+# from collections import deque
+# T = int(input())
+# for _ in range(T):
+#     N,C = map(int,input().split())
+#     grid = []
+#     dirs = [(-1,-1),(-1,0),(-1,1)]
+#     ans = []#最後に結合させよう!
+#     for _ in range(N):
+#         S = list(input())
+#         grid.append(S)
+#         visited = [[False]*N for _ in range(N)]
+#         sx,sy = N-1,C-1
+#         queue = deque()
+#         queue.append((sx,sy))
+        
+#         visited[sx][sy] = True
+        
+#         while queue:
+#             x,y = queue.popleft()
+#             for dx,dy in dirs:
+#                 nx,ny  = x+dx,y+dy
+#                 #幅条件マス目と合わせる
+#                 if 0<=nx<N and 0<= ny<N:
+#                     if grid[nx][ny] == '.':
+#                         visited[nx][ny] = True 
+#                         ans.append('1')
+
+import sys
+input = sys.stdin.readline
+
 T = int(input())
+
 for _ in range(T):
-    N,C = map(int,input().split())
-    grid = []
-    dirs = [(-1,-1),(-1,0),(-1,1)]
-    ans = []#最後に結合させよう!
-    for _ in range(N):
-        S = list(input())
-        grid.append(S)
-        visited = [[False]*N for _ in range(N)]
-        sx,sy = N-1,C-1
-        queue = deque()
-        queue.append((sx,sy))
-        
-        visited[sx][sy] = True
-        
-        while queue:
-            x,y = queue.popleft()
-            for dx,dy in dirs:
-                nx,ny  = x+dx,y+dy
-                #幅条件マス目と合わせる
-                if 0<=nx<N and 0<= ny<N:
-                    if grid[nx][ny] == '.':
-                        visited[nx][ny] = True 
-                        ans.append('1')
+    N, C = map(int, input().split())
+    C -= 1  # 0-indexed
+
+    grid = [list(input().strip()) for _ in range(N)]
+
+    # low[j] = 列 j における一番下の壁の行番号
+    low = [-1] * N
+    for i in range(N):
+        for j in range(N):
+            if grid[i][j] == '#':
+                low[j] = i
+
+    # dp[i][j] = (i, j) に到達可能か
+    dp = [[0] * N for _ in range(N)]
+
+    # 初期状態：どこで止まってもいいので縦は全部OK
+    for i in range(N):
+        dp[i][C] = 1
+
+    # 下から上へ DP
+    for i in range(N - 2, -1, -1):
+        for j in range(N):
+            if dp[i][j]:
+                continue
+
+            # 下3方向のどれかから来れる？
+            ok = False
+            if dp[i + 1][j]:
+                ok = True
+            if j > 0 and dp[i + 1][j - 1]:
+                ok = True
+            if j + 1 < N and dp[i + 1][j + 1]:
+                ok = True
+
+            if not ok:
+                continue
+
+            # マスの種類を見る
+            if grid[i][j] == '.':
+                dp[i][j] = 1
+            else:
+                # 壁の場合：この行がその列の最下壁なら壊せる
+                if low[j] == i:
+                    for k in range(i + 1):
+                        dp[k][j] = 1
+
+    # 出力
+    print(''.join('1' if dp[0][j] else '0' for j in range(N)))
