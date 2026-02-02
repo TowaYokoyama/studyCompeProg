@@ -109,3 +109,38 @@ Copy
 4
 
 """
+from collections import deque
+
+N,M = map(int,input().split())
+mod = (10 ** 9 + 7)
+graph = [[] for _ in range(N)]
+for _ in range(M):
+  A,B = map(int,input().split())
+  graph[A-1].append(B-1)
+  graph[B-1].append(A-1)
+#print(graph)
+
+dist = [-1] * N #最短距離(-1)=未訪問
+cnt = [0] * N #最短距離でなん通りなのか
+
+dist[0] = 0
+cnt [0] = 1
+
+def bfs():
+  queue = deque()
+  queue.append(0) #最初からスタート
+  
+  while queue:
+    v = queue.popleft()
+    for nv in graph[v]:
+      #まだ行ったことがない場合
+      if dist[nv] == -1:
+        dist[nv] = dist[v] + 1 
+        cnt[nv] = cnt[v]
+        queue.append(nv)
+      #2 同じ最短経路で来た場合
+      elif dist[nv] == dist[v] + 1:
+        cnt[nv] = (cnt[nv] + cnt[v]) % mod
+
+bfs()
+print(cnt[N-1])
