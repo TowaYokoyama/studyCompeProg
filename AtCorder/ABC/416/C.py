@@ -115,3 +115,29 @@ N,K,X = map(int,input().split())
 S = [input().strip() for _ in range(N)]
 S.sort()#["abc", "abc", "xxx"]
 
+X -=1#0-indexedに変更するため
+ans = ""
+
+for i in range(K):
+    block = N ** (K-i-1)
+    idx = X // block 
+    ans += S[idx]
+    X %= block 
+
+print(ans)
+
+"""
+（root）
+ ├─ abc
+ │   ├─ abc   → abcabc
+ │   ├─ abc   → abcabc
+ │   └─ xxx   → abcxxx
+ ├─ abc
+ │   ├─ abc   → abcabc
+ │   ├─ abc   → abcabc
+ │   └─ xxx   → abcxxx
+ └─ xxx
+     ├─ abc   → xxxabc
+     ├─ abc   → xxxabc
+     └─ xxx   → xxxxxx
+"""
