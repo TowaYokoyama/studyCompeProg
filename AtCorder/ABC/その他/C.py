@@ -46,3 +46,16 @@ for n in range(1,X//100 + 1):
         exit()
 
 print(0)
+
+#ナップサック的解放
+X = int(input())
+dp = [False] * (X+1)
+dp[0] = True 
+items = [100,101,102,103,104,105]
+
+for i in range(X+1):
+    if dp[i]:
+        for w in items:
+            if i + w <= X:
+                dp[i+w] = True 
+print(1 if dp[X] else 0)
