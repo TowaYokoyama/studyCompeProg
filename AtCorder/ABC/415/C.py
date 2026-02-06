@@ -104,7 +104,46 @@ Yes
 
 1 種類の薬品が存在する。
 """
+from collections import deque
+
 T = int(input())
+
 for _ in range(T):
     N = int(input())
-    S = input()
+    S = input().strip()
+
+    FULL = (1 << N) - 1
+
+    # 危険かどうかを配列にする
+    # S[i] は状態 i+1 に対応している
+    danger = [False] * (1 << N)
+    for i in range(1, 1 << N):
+        if S[i - 1] == '1':
+            danger[i] = True
+
+    # BFS
+    visited = [False] * (1 << N)
+    q = deque()
+
+    # 空集合スタート（必ず安全）
+    visited[0] = True
+    q.append(0)
+
+    ok = False
+
+    while q:
+        cur = q.popleft()
+
+        if cur == FULL:
+            ok = True
+            break
+
+        # 薬品を1つ足す
+        for i in range(N):
+            if not (cur & (1 << i)):
+                nxt = cur | (1 << i)
+                if not danger[nxt] and not visited[nxt]:
+                    visited[nxt] = True
+                    q.append(nxt)
+
+    print("Yes" if ok else "No")
