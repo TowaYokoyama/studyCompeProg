@@ -60,3 +60,21 @@ Copy
 138
 
 """
+N = int(input())
+T = list(map(int,input().split()))
+
+S = sum(T)
+dp = [False] * (S+1)
+dp[0] = True
+
+for t in T:#料理の分を一個一個見ていく
+    for s in range(S, -1, -1):#後ろから見る　そのdpが何回も使えることを防ぎたい
+        if dp[s] and s + t <= S:#今まで作れていたらTrueより
+            dp[s+t] = True
+
+ans = S
+for s in range(S+1):
+    if dp[s]:
+        ans = min(ans, max(s, S-s))
+
+print(ans)
