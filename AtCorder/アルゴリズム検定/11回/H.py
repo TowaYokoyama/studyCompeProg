@@ -133,9 +133,9 @@ for W,U in wu:
     for b in range(B,-1,-1):
       #ふくろ１に入れるなら
       if a + W <= A:
-        dp[a+W][b] = max(dp[a+W][b],dp[a][b] + U)
+        dp[a+W][b] = max(dp[a+W][b],dp[a][b] + U)#元々の作ってたのと今作った状態の遷移
       #ふくろ２に入れる
       if b + W <= B:
-        dp[a][b+W] = max(dp[a][b+W], dp[a][b]+U)
+        dp[a][b+W] = max(dp[a][b+W], dp[a][b]+U)#ここも同様
 
 print(max(max(row) for row in dp))
