@@ -74,5 +74,44 @@ Copy
 600
 
 """
+from collections import deque
+#1つの要素が追加され、1つの要素が削除されるだけ
 N,K = map(int,input().split())
 H = list(map(int,input().split()))
+
+#スライディングウィンドウで最大値と最小値を効率的に管理する
+#単調キューを使用
+max_deque = deque() #最大値を管理
+min_deque = deque() #最小値を管理
+
+max_variation = 0
+
+for i in range(N):
+    #新しい要素を追加
+    #max_deque:後ろから、現在の要素よりも小さいものを削除
+    while max_deque and H[max_deque[-1]] <= H[i]:
+        max_deque.pop()
+    max_deque.append(i)
+    
+    #min_deque:後ろから、現在の要素よりも大きいものを削除
+    while min_deque and H[min_deque[-1]] >= H[i]:
+        min_deque.pop()
+    min_deque.append(i)
+    
+    #ウィンドウサイズがKとして完成したなら
+    if i >= K-1:
+        #ウィンドウ外の要素を前から削除
+        while max_deque[0] < i-K+1:
+            max_deque.popleft()
+        while min_deque[0] <i-K+1:
+            min_deque.popleft()
+        
+        #現在のウィンドウの変動幅を計算
+        current_max = H[max_deque[0]]
+        current_min = H[min_deque[0]]
+        
+        variation = current_max - current_min
+        
+        max_variation = max(max_variation, variation)
+
+print(max_variation)

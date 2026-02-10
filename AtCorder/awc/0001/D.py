@@ -121,10 +121,32 @@ Copy
 3450000000
 
 """
-N,M,K = map(int,input().split())
-ab=[tuple(map(int,input().split())) for _ in range(N)]
-"""
-町 i を最後に選んだとき
-滞在費 c で得られる最大利益
-"""
-dp = [[-1] * (M+1) for _ in range(N)]
+N, M, K = map(int, input().split())
+A = [0]*N
+B = [0]*N
+for i in range(N):
+    A[i], B[i] = map(int, input().split())
+
+NEG = -10**30  # -INF
+dp = [[NEG]*(M+1) for _ in range(N)]
+
+ans = 0  # 何も選ばない場合
+
+for i in range(N):
+    # --- 初期化（町iを単独で選ぶ） ---
+    if B[i] <= M:
+        dp[i][B[i]] = max(dp[i][B[i]], A[i])
+        ans = max(ans, dp[i][B[i]])
+
+    # --- 遷移（直前はi-K..i-1だけ） ---
+    for j in range(max(0, i-K), i):
+        for c in range(M+1):#町 j で終わって、費用 c 使ってる状態」
+            if dp[j][c] == NEG:
+                continue
+            nc = c + B[i]#そこから町 i に行ったら費用は
+            if nc > M:
+                continue
+            dp[i][nc] = max(dp[i][nc], dp[j][c] + A[i])
+            ans = max(ans, dp[i][nc])
+#そこから町 i に行ったら費用はっていう考えかdた
+print(ans)
