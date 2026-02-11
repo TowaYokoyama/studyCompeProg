@@ -72,5 +72,43 @@ Copy
 Copy
 10
 """
-N,S = map(int,input().split())
-A = list(map(int,input().split()))
+import sys
+from bisect import bisect_left, bisect_right
+
+def main() -> None:
+    input = sys.stdin.readline
+    N, S = map(int, input().split())
+    A = list(map(int, input().split()))
+
+    half = N // 2
+    A1 = A[:half]
+    A2 = A[half:]
+
+    # 部分和列挙（全サブセット）
+    L = []
+    for mask in range(1 << len(A1)):
+        s = 0
+        for i in range(len(A1)):
+            if mask & (1 << i):
+                s += A1[i]
+        L.append(s)
+
+    R = []
+    for mask in range(1 << len(A2)):
+        s = 0
+        for i in range(len(A2)):
+            if mask & (1 << i):
+                s += A2[i]
+        R.append(s)
+
+    R.sort()
+
+    ans = 0
+    for x in L:
+        t = S - x
+        ans += bisect_right(R, t) - bisect_left(R, t)
+
+    print(ans)
+
+if __name__ == "__main__":
+    main()
