@@ -72,3 +72,18 @@ Copy
 3
 5
 """
+N = int(input())
+A = list(map(int, input().split()))
+D = int(input())
+
+left_max = [0]*(N+1)
+for i in range(N):
+    left_max[i+1] = max(left_max[i], A[i])
+
+right_max = [0]*(N+2)
+for i in range(N-1, -1, -1):
+    right_max[i+1] = max(right_max[i+2], A[i])
+
+for _ in range(D):
+    L, R = map(int, input().split())
+    print(max(left_max[L-1], right_max[R+1]))

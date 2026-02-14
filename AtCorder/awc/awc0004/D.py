@@ -99,9 +99,32 @@ Copy
 Copy
 Yes
 """
-N,M = map(int,input().split())
-car_li = []
-for _ in range(M):
-    L,R = map(int,input().split())
-    car_li.append((L,R))
-print(car_li)
+import sys
+sys.setrecursionlimit(10**7)
+
+def find(x):
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
+"""
+自分が空いてたらそのまま返す
+埋まってたら
+次の候補へジャンプ
+ついでにショートカットする（経路圧縮）
+"""
+N, M = map(int, input().split())
+cars = [tuple(map(int, input().split())) for _ in range(M)]
+
+# Rでソート
+cars.sort(key=lambda x: x[1])
+
+parent = list(range(N + 2))  # N+1は番兵
+
+for L, R in cars:
+    pos = find(L)
+    if pos > R:
+        print("No")
+        exit()
+    parent[pos] = find(pos + 1)
+
+print("Yes")

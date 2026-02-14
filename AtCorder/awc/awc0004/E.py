@@ -99,3 +99,19 @@ Copy
 Copy
 28
 """
+from collections import defaultdict 
+
+N,K =map(int,input().split())
+A = list(map(int,input().split()))
+
+count = defaultdict(int)
+count[0] = 1 
+prefix = 0
+ans = 0
+
+for a in A:
+  prefix+=a 
+  ans += count[prefix - K]
+  count[prefix] += 1
+  
+print(ans)
