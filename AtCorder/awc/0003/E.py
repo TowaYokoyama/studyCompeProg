@@ -105,3 +105,39 @@ Copy
 Yes
 
 """
+N, M = map(int, input().split())
+W = list(map(int, input().split()))
+C = list(map(int, input().split()))
+
+# 各部分集合の重さ
+subset_sum = [0] * (1 << N)
+
+for mask in range(1 << N):
+    total = 0
+    for i in range(N):
+        if mask & (1 << i):
+            total += W[i]
+    subset_sum[mask] = total
+
+# 各部分集合がどれかのトラックに乗るか
+can_use = [False] * (1 << N)
+for mask in range(1 << N):
+    for cap in C:
+        if subset_sum[mask] <= cap:
+            can_use[mask] = True
+            break
+
+dp = [False] * (1 << N)
+dp[0] = True
+
+for mask in range(1 << N):
+    if not dp[mask]:
+        continue
+    remain = ((1 << N) - 1) ^ mask
+    sub = remain
+    while sub:
+        if can_use[sub]:
+            dp[mask | sub] = True
+        sub = (sub - 1) & remain
+
+print("Yes" if dp[(1 << N) - 1] else "No")
