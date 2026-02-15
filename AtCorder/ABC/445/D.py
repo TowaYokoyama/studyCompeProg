@@ -168,5 +168,60 @@ Copy
 79 22
 7 15
 # """
-# H,W,N = map(int,input().split())
-# for _ in range
+import sys
+input = sys.stdin.readline
+
+H, W, N = map(int, input().split())
+h = [0] * N
+w = [0] * N
+for i in range(N):
+    h[i], w[i] = map(int, input().split())
+
+# hが大きい順のピース番号列
+ord_h = list(range(N))
+ord_h.sort(key=lambda i: h[i], reverse=True)
+
+# wが大きい順のピース番号列
+ord_w = list(range(N))
+ord_w.sort(key=lambda i: w[i], reverse=True)
+
+ans_x = [-1] * N
+ans_y = [-1] * N
+used = [False] * N
+
+ith = 0  # ord_h のどこまで見たか
+itw = 0  # ord_w のどこまで見たか
+
+# 「今の残りスペース」が H×W の長方形だと思って、
+# 毎回その “右下の角” に1枚ずつ置いていく
+for _ in range(N):
+    # もう使ったピースは飛ばす（ソート列の先頭が使われてる可能性がある）
+    while ith < N and used[ord_h[ith]]:
+        ith += 1
+    while itw < N and used[ord_w[itw]]:
+        itw += 1
+
+    # 次に置く候補（縦最大 / 横最大）
+    cand_h = ord_h[ith]
+    cand_w = ord_w[itw]
+
+    # 置けるのは「縦がHと一致」か「横がWと一致」だけ
+    # （入力は必ず可能だと保証されてるので、どっちかは必ず一致する）
+    if h[cand_h] == H:
+        i = cand_h           # 縦がぴったりのやつを置く
+        # 右下に置いたときの左上座標（1-index）
+        ans_x[i] = H - h[i] + 1
+        ans_y[i] = W - w[i] + 1
+        used[i] = True
+        # 縦がぴったり → 横に切り取ったことになる → 残り幅が減る
+        W -= w[i]
+    else:
+        i = cand_w           # 横がぴったりのやつを置く
+        ans_x[i] = H - h[i] + 1
+        ans_y[i] = W - w[i] + 1
+        used[i] = True
+        # 横がぴったり → 縦に切り取ったことになる → 残り高さが減る
+        H -= h[i]
+
+for i in range(N):
+    print(ans_x[i], ans_y[i])

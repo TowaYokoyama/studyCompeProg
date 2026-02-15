@@ -98,3 +98,38 @@ for i in range(1, N + 1):
 
 print(*ans[1:])
 
+
+from collections import deque
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+A = list(map(int, input().split()))
+
+# 0-indexにする
+A = [a-1 for a in A]
+
+# 逆グラフ
+rev = [[] for _ in range(N)]
+for i in range(N):
+    rev[A[i]].append(i)
+
+ans = [-1] * N
+queue = deque()
+
+# 自己ループを初期化
+for i in range(N):
+    if A[i] == i:
+        ans[i] = i
+        queue.append(i)
+
+# BFS
+while queue:
+    v = queue.popleft()
+    for nv in rev[v]:
+        if ans[nv] == -1:
+            ans[nv] = ans[v]
+            queue.append(nv)
+
+# 1-indexに戻す
+print(*(a+1 for a in ans))
