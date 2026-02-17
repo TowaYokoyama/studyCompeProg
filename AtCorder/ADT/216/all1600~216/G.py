@@ -32,3 +32,34 @@ Copy
 Copy
 896
 """
+
+"""
+i = (平方部分) × (平方じゃない部分)
+"""
+
+import sys
+input = sys.stdin.readline
+
+N, M = map(int, input().split())
+
+a = []
+for _ in range(M):
+    c = int(input())
+    arr = list(map(int, input().split()))
+    a.append(arr)
+
+ans = 0
+
+# 0 から (1<<M)-1 まで全部試す
+for b in range(1 << M):
+    s = set()
+
+    for i in range(M):
+        if (b >> i) & 1:
+            for x in a[i]:
+                s.add(x)
+
+    if len(s) == N:
+        ans += 1
+
+print(ans)

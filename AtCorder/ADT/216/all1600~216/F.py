@@ -193,4 +193,36 @@ Copy
 出力例 3
 Copy
 18
+
 """
+import sys
+input = sys.stdin.readline
+
+def solve():
+    N, M = map(int, input().split())
+
+    masks = []
+    for _ in range(M):
+        C = int(input().strip())
+        arr = list(map(int, input().split()))
+        mask = 0
+        for a in arr:
+            mask |= 1 << (a - 1)  # aは1..Nなので0-indexへ
+        masks.append(mask)
+
+    full = (1 << N) - 1
+    ans = 0
+
+    # 1個以上選ぶので 1 からスタート（0は空選択）
+    for sel in range(1, 1 << M):
+        cover = 0
+        for i in range(M):
+            if sel & (1 << i):
+                cover |= masks[i]
+        if cover == full:
+            ans += 1
+
+    print(ans)
+
+if __name__ == "__main__":
+    solve()

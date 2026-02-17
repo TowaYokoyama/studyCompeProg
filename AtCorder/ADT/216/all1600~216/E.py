@@ -333,3 +333,59 @@ Copy
 Copy
 Yes
 """
+#黒マスの座標だけ使う
+def get_black_positions(sheet, H, W):
+    blacks = []
+    for i in range(H):
+        for j in range(W):
+            if sheet[i][j] == '#':
+                blacks.append((i, j))
+    return blacks
+
+
+def solve():
+    HA, WA = map(int, input().split())
+    A = [input().strip() for _ in range(HA)]
+
+    HB, WB = map(int, input().split())
+    B = [input().strip() for _ in range(HB)]
+
+    HX, WX = map(int, input().split())
+    X = [input().strip() for _ in range(HX)]
+
+    A_black = get_black_positions(A, HA, WA)
+    B_black = get_black_positions(B, HB, WB)
+    X_black = set(get_black_positions(X, HX, WX))
+
+    # Aのずらし
+    for dyA in range(-10, 11):
+        for dxA in range(-10, 11):
+
+            shifted_A = set((y + dyA, x + dxA) for y, x in A_black)
+
+            # Bのずらし
+            for dyB in range(-10, 11):
+                for dxB in range(-10, 11):
+
+                    shifted_B = set((y + dyB, x + dxB) for y, x in B_black)
+
+                    merged = shifted_A | shifted_B
+
+                    # Xの範囲内だけを見る
+                    valid = True
+                    for y, x in merged:
+                        if not (0 <= y < HX and 0 <= x < WX):
+                            valid = False
+                            break
+
+                    if not valid:
+                        continue
+
+                    if merged == X_black:
+                        print("Yes")
+                        return
+
+    print("No")
+
+
+solve()
