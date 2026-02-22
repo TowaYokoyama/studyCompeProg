@@ -83,3 +83,51 @@ Copy
 Copy
 995373
 """
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+M, A, B = map(int, input().split())
+
+# 頂点数は M^2
+# 頂点番号は x*M + y で管理
+edges = [[] for _ in range(M * M)]
+
+# 逆辺を作る
+for x in range(M):
+    for y in range(M):
+        # (x, y) <- (y, (A*y + B*x) % M)
+        k = (x * B + y * A) % M
+        from_state = y * M + k
+        to_state = x * M + y
+        edges[from_state].append(to_state)
+
+# BFS
+visited = [False] * (M * M)
+queue = deque()
+
+# 初期状態：0 を含む状態
+for x in range(M):
+    for y in range(M):
+        if x == 0 or y == 0:
+            v = x * M + y
+            visited[v] = True
+            queue.append(v)
+
+# BFS 実行
+while queue:
+    v = queue.popleft()
+    for u in edges[v]:
+        if not visited[u]:
+            visited[u] = True
+            queue.append(u)
+
+# 答えカウント
+ans = 0
+for x in range(M):
+    for y in range(M):
+        if not visited[x * M + y]:
+            ans += 1
+
+print(ans)
