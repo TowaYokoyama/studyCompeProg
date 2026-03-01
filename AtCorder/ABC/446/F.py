@@ -140,3 +140,52 @@ Copy
 G は連結とは限りません。また、
 G は多重辺や自己ループを持つこともあります。
 """
+import sys
+sys.setrecursionlimit(10**7)
+input = sys.stdin.readline
+
+def solve():
+    n, m = map(int, input().split())
+    
+    # 隣接リスト
+    edges = [[] for _ in range(n)]
+    for _ in range(m):
+        x, y = map(int, input().split())
+        edges[x-1].append(y-1)
+    
+    vis = [False] * n   # G_i において 1 から到達可能か
+    can = [False] * n   # 1..i のどれかから 1 辺で行けるか
+    
+    cvis = 0  # 現在到達可能な頂点数
+    ccan = 0  # 1 辺で到達可能な頂点数
+    
+    def dfs(k, mx):
+        nonlocal cvis, ccan
+        vis[k] = True
+        cvis += 1
+        
+        for to in edges[k]:
+            # G_i 内でまだ未訪問なら DFS
+            if not vis[to] and to <= mx:
+                dfs(to, mx)
+            
+            # 1 辺で到達可能集合に追加
+            if not can[to]:
+                can[to] = True
+                ccan += 1
+    
+    for i in range(n):
+        if i == 0:
+            can[0] = True
+            ccan += 1
+        
+        if can[i]:
+            dfs(i, i)
+        
+        if cvis == i + 1:
+            print(ccan - cvis)
+        else:
+            print(-1)
+
+if __name__ == "__main__":
+    solve()
