@@ -118,3 +118,62 @@ Copy
 Copy
 8437
 """
+import sys
+input = sys.stdin.readline
+
+k, m = map(int, input().split())
+
+mod = m * 10007
+
+c = []
+l = []
+
+for _ in range(k):
+    ci, li = map(int, input().split())
+    c.append(ci)
+    l.append(li)
+
+
+def power(a, b):
+    res = 1
+    cur = a % mod
+    while b > 0:
+        if b & 1:
+            res = (res * cur) % mod
+        cur = (cur * cur) % mod
+        b >>= 1
+    return res
+
+
+# 10^(2^d)
+pow_keep = [0] * 30
+pow_keep[0] = 10 % mod
+for d in range(1, 30):
+    pow_keep[d] = (pow_keep[d-1] * pow_keep[d-1]) % mod
+
+
+# R_(2^d)
+Rpow2 = [0] * 30
+Rpow2[0] = 1
+for d in range(1, 30):
+    Rpow2[d] = (Rpow2[d-1] * pow_keep[d-1] + Rpow2[d-1]) % mod
+
+
+res = 0
+dgt = 0
+
+for i in range(k-1, -1, -1):
+
+    ce = (c[i] * power(10, dgt)) % mod
+
+    R = 0
+    for d in range(29, -1, -1):
+        if l[i] & (1 << d):
+            R = (R * pow_keep[d] + Rpow2[d]) % mod
+
+    res = (res + ce * R) % mod
+
+    dgt += l[i]
+
+
+print(res // m)

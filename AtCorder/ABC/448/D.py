@@ -146,9 +146,18 @@ for _ in range(n - 1):
     g[u].append(v)
     g[v].append(u)
 
-cnt = 0
-s = set()
-ans = [0] * n
+"""
+木構造(0-indexed)
+0(値1)
+   / \
+  1   2(値2)
+(値3) / \
+     3   4
+   (値1) (値2)
+"""
+cnt = 0 #重複している値の個数
+s = set() #現在のパス上に存在する整数の集合
+ans = [0] * n #頂点vへのパスに重複があれば1
 
 
 def dfs(v, pv):
