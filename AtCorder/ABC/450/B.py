@@ -94,7 +94,7 @@ No
 N = int(input())
 C = {}
 # graph = []
-# #グラフで有向でいく
+
 
 for i in range(1,N):
     move_c = list(map(int,input().split()))#駅iから行けるその駅までのコスト
