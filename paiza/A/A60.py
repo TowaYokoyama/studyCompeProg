@@ -58,6 +58,7 @@ SG
 出力例2
 R
 """
+from collections import deque
 H,W = map(int, input().split())
 maze = [input() for _ in range(H)]
 
@@ -69,3 +70,20 @@ for i in range(H):
             goal = (i,j)
 dirs = [(1,0,"D"),(-1,0,"U"),(0,1,"R"),(0,-1,"L")]
 
+def bfs(start,goal):
+    queue = deque([(start, "")])
+    visited = set()
+    visited.add(start)
+    
+    while queue:
+        (x,y),path = queue.popleft()
+        if (x,y) == goal:
+            return path #ゴールに到達したらコマンドを返す
+        for dx,dy,cmd in dirs:
+            nx,ny = x+dx,y+dy
+            if 0 <= nx < H and 0 <= ny < W and maze[nx][ny] != "#" and (nx,ny) not in visited:
+                visited.add((nx,ny))
+                queue.append(((nx,ny), path + cmd))
+    return False
+
+print(bfs(start,goal))
