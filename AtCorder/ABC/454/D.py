@@ -75,7 +75,24 @@ Yes
 A の 1 文字目から 4 文字目の (xx) を xx に置換する。操作後の A は xxx となる。
 A の 2 文字目から 3 文字目の xx を (xx) に置換する。操作後の A は x(xx) となる。
 """
-T = int(input())
-for _ in range(T):
-    A= input()
-    B = input()
+def F(S):
+    st = []
+    for i in S:
+        st.append(i)
+        while True:
+            n = len(st)
+            if n >= 4 and st[-4] == '(' and st[-3] == 'x' and st[-2] == 'x' and st[-1] == ')':
+                st.pop()
+                st.pop()
+                st.pop()
+                st.pop()
+                st.append('x')
+                st.append('x')
+            else:
+                break
+    return st
+
+for _ in range(int(input())):
+    A = list(input())
+    B = list(input())
+    print("Yes" if F(A) == F(B) else "No")
