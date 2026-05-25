@@ -73,72 +73,17 @@ N=3 であり、はじめ、左から 1,2,3 番目に積まれているブロッ
 1 個以上のブロックが積まれているマスは左から 3 番目のマスの 1 つだけです。よって、1 を出力します。
 よって、2,1,1 をこの順に各行に出力します。
 """
-class BIT:
-    def __init__(self, n):
-        self.n = n
-        self.bit = [0] * (n + 1)
+n, q = map(int,input().split())
 
-    def add(self, i, x):
-        i += 1
-        while i <= self.n:
-            self.bit[i] += x
-            i += i & -i
-
-    def sum(self, i):
-        # [0, i)
-        s = 0
-        while i > 0:
-            s += self.bit[i]
-            i -= i & -i
-        return s
-
-    def range_sum(self, l, r):
-        return self.sum(r) - self.sum(l)
-
-
-N, Q = map(int, input().split())
-
-cnt = [0] * N
-
-# freq管理用
-freq = [0] * (Q + 2)
-freq[0] = N
-
-# BIT に freq を載せる
-bit = BIT(Q + 2)
-bit.add(0, N)
-
-g = 0
-mn = 0
-
-for _ in range(Q):
-    t, x = map(int, input().split())
-
-    if t == 1:
-        x -= 1
-
-        old = cnt[x]
-        new = old + 1
-
-        cnt[x] = new
-
-        freq[old] -= 1
-        freq[new] += 1
-
-        bit.add(old, -1)
-        bit.add(new, 1)
-
-        while freq[mn] == 0:
-            mn += 1
-
-        if mn >= g + 1:
-            g += 1
-
+b = [0]*(n+1)
+h = [0]*(600001)
+base = 0
+for _ in range(q):
+    c, xy = map(int,input().split())
+    if c == 1:
+        b[xy-1] += 1
+        h[b[xy-1]] += 1
+        if h[base+1] == n:
+            base += 1
     else:
-        y = x
-
-        need = y + g
-
-        ans = bit.range_sum(need, Q + 2)
-
-        print(ans)
+        print(h[xy+base])
