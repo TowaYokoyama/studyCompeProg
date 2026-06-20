@@ -1,6 +1,5 @@
-S = input()
-suji = ""
-for a in S:
-    if a.isdigit():
-        suji += a
-print(suji)
+X,Y = map(int,input().split())
+if X == Y * 16//9:
+    print("Yes")
+else:
+    print("No")
