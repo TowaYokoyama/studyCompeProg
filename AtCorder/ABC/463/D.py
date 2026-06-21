@@ -114,3 +114,46 @@ Copy
 Copy
 35
 """
+
+import sys
+
+def main():
+    input_data = sys.stdin.read().split()
+    idx = 0
+    N = int(input_data[idx]); idx += 1
+    K = int(input_data[idx]); idx += 1
+    intervals = []
+    for _ in range(N):
+        L = int(input_data[idx]); idx += 1
+        R = int(input_data[idx]); idx += 1
+        intervals.append((R, L))  # Rでソートするため
+
+    intervals.sort()  # R昇順
+
+    def feasible(X):
+        count = 0
+        last_end = -10**18
+        for R, L in intervals:
+            if L >= last_end + X:
+                count += 1
+                last_end = R
+                if count >= K:
+                    return True
+        return count >= K
+
+    if not feasible(1):
+        print(-1)
+        return
+
+    lo, hi = 1, 10**9
+    while lo < hi:
+        mid = (lo + hi + 1) // 2
+        if feasible(mid):
+            lo = mid
+        else:
+            hi = mid - 1
+
+    print(lo)
+
+if __name__ == "__main__":
+    main()
