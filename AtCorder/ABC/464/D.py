@@ -141,3 +141,38 @@ Copy
 
 5 個目のテストケースについて、答えが 32bit 整数型に収まらない場合があることに注意してください。
 """
+t = int(input())
+
+for _ in range(t):
+    n = int(input())
+    s = input()
+
+    cost = list(map(int, input().split()))
+    bonus = list(map(int, input().split()))
+
+    # 最後がRで終わる場合の最大値
+    last_r = 0
+
+    # 最後がR以外で終わる場合の最大値
+    last_other = 0
+
+    # 初期化
+    if s[0] == 'R':
+        last_r = -cost[0]
+    else:
+        last_other = -cost[0]
+
+    # DP
+    for i in range(1, n):
+        new_r = max(last_r, last_other + bonus[i - 1])
+        new_other = max(last_r, last_other)
+
+        if s[i] == 'R':
+            new_r -= cost[i]
+        else:
+            new_other -= cost[i]
+
+        last_r = new_r
+        last_other = new_other
+
+    print(max(last_r, last_other))
