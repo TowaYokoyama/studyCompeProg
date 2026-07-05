@@ -92,3 +92,29 @@ y
  ⌋=3 よりこの選択は合法である。そして、x の値を 9 に置き換える。
 2 回未満の操作で x=Y とすることはできないので、1 行目には 2 を出力してください。
 """
+T = int(input())
+
+for _ in range(T):
+    X, Y, K = map(int, input().split())
+
+    dist = {}
+
+    # Xから根へ向かう距離を記録
+    x = X
+    d = 0
+    while True:
+        dist[x] = d
+        if x == 0:
+            break
+        x //= K
+        d += 1
+
+    # Yから根へ向かい、最初に共通祖先になった場所が答え
+    y = Y
+    d = 0
+    while True:
+        if y in dist:
+            print(dist[y] + d)
+            break
+        y //= K
+        d += 1
