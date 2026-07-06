@@ -122,3 +122,29 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
+    
+from collections import deque
+
+N = int(input())
+S = input()
+
+rev = False
+queue = deque()
+
+for i in range(1, N + 1):
+    # 今の向きで i を追加
+    if not rev:
+        queue.append(i)
+    else:
+        queue.appendleft(i)
+
+    # o なら向きを反転
+    if S[i - 1] == 'o':
+        rev = not rev
+
+# 最後に向きが反転していたら、逆順で出力
+if rev:
+    print(*reversed(queue))
+else:
+    print(*queue)
